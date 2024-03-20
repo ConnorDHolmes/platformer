@@ -74,7 +74,7 @@ function movePlayer() {
   }
   p.y += p.vSpd;
 
-  //update p element in DOM
+  //update player element in DOM
   placeEl(p);
 }
 

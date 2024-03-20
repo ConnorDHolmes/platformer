@@ -5,7 +5,6 @@ const rm = {
   h: 2048,
   x: 0,
   y: 0,
-  scl: 2,
 };
 
 const p = {
@@ -164,9 +163,20 @@ const items = [
       var: "concrete",
     },
     x: 1500,
-    y: 1000,
+    y: 940,
     w: 16,
     h: 128,
+  },
+  {
+    solid: true,
+    mods: {
+      role: "wall",
+      var: "concrete",
+    },
+    x: 1450,
+    y: 1050,
+    w: 120,
+    h: 12,
   },
   {
     solid: true,
