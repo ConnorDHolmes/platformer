@@ -1,9 +1,17 @@
 //global paused state
 let paused = false;
 
+//easing function for camera
+function easeCam() {
+  rm.x += (cam.x - rm.x) * cam.ease;
+  rm.y += (cam.y - rm.y) * cam.ease;
+}
+
 //translate an item's DOM element to its coordinates
 function placeEl(item) {
-  item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, 0)`;
+  item.el.style.transform = item.dyn
+    ? `translate3d(${item.x}px, ${item.y}px, 0)`
+    : `translate(${item.x}px, ${item.y}px)`;
 }
 
 //size an item's DOM element to its dimensions

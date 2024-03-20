@@ -4,13 +4,11 @@
 }
 
 * {
-  box-sizing: border-box;
   backface-visibility: hidden;
 }
 
-body,
-g-camera,
-g-room {
+g-cam,
+g-rm {
   contain: strict;
 }
 
@@ -28,25 +26,25 @@ body {
   background-color: #000;
 }
 
-g-room,
-g-item {
+g-rm,
+g-itm {
   position: absolute;
   inset: 0 auto auto 0;
 }
 
-g-room {
+g-rm {
   background: var(--tex-room);
 }
 
-g-item[player] {
-  /* border-radius: 50%; */
+g-rm,
+g-itm[dyn] {
+  will-change: transform;
+}
+
+g-itm[p] {
   background-color: white;
 }
 
-g-item[role="wall"] {
+g-itm[role="wall"] {
   background: var(--tex-walls);
-}
-
-g-item[var="orange"] {
-  background: orange;
 }

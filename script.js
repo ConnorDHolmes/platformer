@@ -7,7 +7,7 @@ let then = performance.now();
 function build() {
   //populate room with items
   items.forEach((item) => {
-    item.el = document.createElement("g-item");
+    item.el = document.createElement("g-itm");
     addEl(item);
   });
 
@@ -18,11 +18,12 @@ function build() {
 
 function positionCamera() {
   if (p.x > cam.hW - cam.hPW && p.x < rm.w - cam.hW - cam.hPW) {
-    rm.x = -p.x + cam.hW - cam.hPW;
+    cam.x = -p.x + cam.hW - cam.hPW;
   }
   if (p.y > cam.hH - cam.hPH && p.y < rm.h - cam.hH - cam.hPH) {
-    rm.y = -p.y + cam.hH - cam.hPH;
+    cam.y = -p.y + cam.hH - cam.hPH;
   }
+  easeCam();
   //update rooom relative to view box
   placeEl(rm);
 }
@@ -58,13 +59,15 @@ function movePlayer() {
   }
   p.x += p.hSpd;
 
-  //vertical movement
-  if (press.up === press.down) {
-    !groupCol(p, items, 0, p.vSpd) && decelV();
-  } else if (press.up && p.vSpd > -p.mSpd) {
-    p.vSpd -= p.accel;
-  } else if (press.down && p.vSpd < p.mSpd) {
+  if (p.canJump && press.up) {
+    p.canJump = false;
+    p.vSpd = -p.jumpHeight;
+  }
+  if (!groupCol(p, items, 0, p.vSpd) && p.vSpd < p.jumpHeight) {
     p.vSpd += p.accel;
+  }
+  if (groupCol(p, items, 0, 1) && !press.up) {
+    p.canJump = true;
   }
   while (groupCol(p, items, 0, p.vSpd)) {
     decelV();
