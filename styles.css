@@ -1,0 +1,52 @@
+:root {
+  --tex-room: #222;
+  --tex-walls: #555;
+}
+
+* {
+  box-sizing: border-box;
+  backface-visibility: hidden;
+}
+
+body,
+g-camera,
+g-room {
+  contain: strict;
+}
+
+html {
+  overscroll-behavior: none;
+}
+
+body {
+  display: grid;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0;
+  place-items: center;
+  image-rendering: pixelated;
+  background-color: #000;
+}
+
+g-room,
+g-item {
+  position: absolute;
+  inset: 0 auto auto 0;
+}
+
+g-room {
+  background: var(--tex-room);
+}
+
+g-item[player] {
+  /* border-radius: 50%; */
+  background-color: white;
+}
+
+g-item[role="wall"] {
+  background: var(--tex-walls);
+}
+
+g-item[var="orange"] {
+  background: orange;
+}
