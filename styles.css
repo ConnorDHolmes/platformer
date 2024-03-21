@@ -1,10 +1,24 @@
+* {
+  backface-visibility: hidden;
+}
+
+html {
+  overscroll-behavior: none;
+}
+
 :root {
   --tex-room: #222;
   --tex-walls: #555;
 }
 
-* {
-  backface-visibility: hidden;
+body {
+  display: grid;
+  height: 100vh;
+  height: 100dvh;
+  margin: auto;
+  place-items: center;
+  image-rendering: pixelated;
+  background-color: #000;
 }
 
 g-cam,
@@ -12,28 +26,14 @@ g-rm {
   contain: strict;
 }
 
-html {
-  overscroll-behavior: none;
-}
-
-body {
-  display: grid;
-  height: 100vh;
-  height: 100dvh;
-  margin: 0;
-  place-items: center;
-  image-rendering: pixelated;
-  background-color: #000;
+g-rm {
+  background-color: var(--tex-room);
 }
 
 g-rm,
 g-itm {
   position: absolute;
   inset: 0 auto auto 0;
-}
-
-g-rm {
-  background: var(--tex-room);
 }
 
 g-rm,
@@ -46,5 +46,5 @@ g-itm[p] {
 }
 
 g-itm[role="wall"] {
-  background: var(--tex-walls);
+  background-color: var(--tex-walls);
 }

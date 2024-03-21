@@ -5,11 +5,15 @@ let then = performance.now();
 
 //set up the room
 function build() {
+  createRoomCollisionCells();
   //populate room with items
   items.forEach((item) => {
     item.el = document.createElement("g-itm");
+    setCellsOfStaticItem(item);
     addEl(item);
   });
+
+  console.log(rm.cells);
 
   sizeEl(cam);
   sizeEl(rm);
@@ -24,7 +28,7 @@ function positionCamera() {
     cam.y = -p.y + cam.hH - cam.hPH;
   }
   easeCam();
-  //update rooom relative to view box
+  //update room relative to view box
   placeEl(rm);
 }
 
@@ -46,30 +50,31 @@ function decelV() {
 
 //handle player movement and collisions
 function movePlayer() {
+  const colItems = getStaticColsOfDynItem(p);
   //horizontal movement
   if (press.left === press.right) {
-    !groupCol(p, items, p.hSpd, 0) && decelH();
+    !groupCol(p, colItems, p.hSpd, 0) && decelH();
   } else if (press.left && p.hSpd > -p.mSpd) {
     p.hSpd -= p.accel;
   } else if (press.right && p.hSpd < p.mSpd) {
     p.hSpd += p.accel;
   }
-  while (groupCol(p, items, p.hSpd, 0)) {
+  while (groupCol(p, colItems, p.hSpd, 0)) {
     decelH();
   }
   p.x += p.hSpd;
 
-  if (p.canJump && press.up) {
+  if (p.canJump && press.up && groupCol(p, colItems, 0, 1)) {
     p.canJump = false;
     p.vSpd = -p.jumpHeight;
   }
-  if (!groupCol(p, items, 0, p.vSpd) && p.vSpd < p.jumpHeight) {
+  if (!groupCol(p, colItems, 0, p.vSpd) && p.vSpd < p.jumpHeight) {
     p.vSpd += p.accel;
   }
-  if (groupCol(p, items, 0, 1) && !press.up) {
+  if (groupCol(p, colItems, 0, 1) && !press.up) {
     p.canJump = true;
   }
-  while (groupCol(p, items, 0, p.vSpd)) {
+  while (groupCol(p, colItems, 0, p.vSpd)) {
     decelV();
   }
   p.y += p.vSpd;

@@ -1,10 +1,11 @@
 const rm = {
   el: document.querySelector("g-rm"),
-  dyn: true,
-  w: 2048,
-  h: 2048,
+  w: 2057,
+  h: 3000,
   x: 0,
   y: 0,
+  cellSize: 128,
+  cells: [],
 };
 
 const p = {
@@ -20,6 +21,12 @@ const p = {
   vSpd: 0,
   jumpHeight: 12,
   canJump: false,
+  get cellX() {
+    return Math.floor(p.x / rm.cellSize);
+  },
+  get cellY() {
+    return Math.floor(p.y / rm.cellSize);
+  },
 };
 
 const cam = {
@@ -28,6 +35,7 @@ const cam = {
   h: 640,
   x: 0,
   y: 0,
+  //for cosmetics only
   ease: 0.05,
 };
 cam.hW = cam.w / 2;
@@ -76,8 +84,8 @@ const items = [
     },
     x: 200,
     y: 845,
-    w: 93,
-    h: 197,
+    w: 128,
+    h: 128,
   },
   {
     solid: true,
@@ -188,5 +196,16 @@ const items = [
     y: 1000,
     w: 16,
     h: 128,
+  },
+  {
+    solid: true,
+    mods: {
+      role: "wall",
+      var: "concrete",
+    },
+    x: 300,
+    y: 1800,
+    w: 2000,
+    h: 32,
   },
 ];

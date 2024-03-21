@@ -1,6 +1,45 @@
 //global paused state
 let paused = false;
 
+function createRoomCollisionCells() {
+  const colCt = Math.ceil(rm.w / rm.cellSize);
+  const rowCt = Math.ceil(rm.h / rm.cellSize);
+  for (let i = 0; i <= colCt; i++) {
+    const col = [];
+    for (let i = 0; i <= rowCt; i++) col.push([]);
+    rm.cells.push(col);
+  }
+}
+
+function setCellsOfStaticItem(item) {
+  const x1 = Math.floor(item.x / rm.cellSize);
+  const y1 = Math.floor(item.y / rm.cellSize);
+  const x2 = Math.floor((item.x + item.w) / rm.cellSize);
+  const y2 = Math.floor((item.y + item.h) / rm.cellSize);
+
+  for (let col = x2; col >= x1; col--)
+    for (let row = y2; row >= y1; row--) rm.cells[col][row].push(item);
+}
+
+function getStaticColsOfDynItem(item) {
+  const filteredColItems = [];
+  [
+    ...rm.cells[item.cellX - 1][item.cellY - 1],
+    ...rm.cells[item.cellX][item.cellY - 1],
+    ...rm.cells[item.cellX + 1][item.cellY - 1],
+    ...rm.cells[item.cellX - 1][item.cellY],
+    ...rm.cells[item.cellX][item.cellY],
+    ...rm.cells[item.cellX + 1][item.cellY],
+    ...rm.cells[item.cellX - 1][item.cellY + 1],
+    ...rm.cells[item.cellX][item.cellY + 1],
+    ...rm.cells[item.cellX + 1][item.cellY + 1],
+  ].forEach(
+    (colItem) =>
+      !filteredColItems.includes(colItem) && filteredColItems.push(colItem)
+  );
+  return filteredColItems;
+}
+
 //easing function for camera
 function easeCam() {
   rm.x += (cam.x - rm.x) * cam.ease;
