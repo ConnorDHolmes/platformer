@@ -2,7 +2,8 @@
   backface-visibility: hidden;
 }
 
-html {
+html,
+body {
   overscroll-behavior: none;
 }
 
@@ -21,9 +22,9 @@ body {
   background-color: #000;
 }
 
-g-cam,
-g-rm {
+g-cam {
   contain: strict;
+  perspective: 1000px;
 }
 
 g-rm {
@@ -36,9 +37,13 @@ g-itm {
   inset: 0 auto auto 0;
 }
 
+g-itm {
+  will-change: opacity;
+}
+
 g-rm,
 g-itm[dyn] {
-  will-change: transform;
+  will-change: opacity, transform;
 }
 
 g-itm[p] {
@@ -47,4 +52,8 @@ g-itm[p] {
 
 g-itm[role="wall"] {
   background-color: var(--tex-walls);
+}
+
+g-itm[role="spikes"] {
+  background-color: red;
 }

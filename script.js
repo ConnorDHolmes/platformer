@@ -1,7 +1,27 @@
+"use strict";
 //max framerate
 const targetFPS = 60;
 const fpsInterval = 1000 / targetFPS;
+const visChangeQueue = [];
 let then = performance.now();
+
+function allVisChanges() {
+  while (visChangeQueue.length) {
+    const change = visChangeQueue.shift();
+    change[0].style.visibility = change[1] ? "visible" : "hidden";
+  }
+}
+
+const occluder = new IntersectionObserver(
+  (entries) =>
+    entries.forEach((entry) =>
+      visChangeQueue.push([entry.target, entry.isIntersecting])
+    ),
+  {
+    root: cam.el,
+    rootMargin: "16px",
+  }
+);
 
 //set up the room
 function build() {
@@ -9,11 +29,11 @@ function build() {
   //populate room with items
   items.forEach((item) => {
     item.el = document.createElement("g-itm");
+
+    occluder.observe(item.el);
     setCellsOfStaticItem(item);
     addEl(item);
   });
-
-  console.log(rm.cells);
 
   sizeEl(cam);
   sizeEl(rm);
@@ -50,31 +70,32 @@ function decelV() {
 
 //handle player movement and collisions
 function movePlayer() {
-  const colItems = getStaticColsOfDynItem(p);
+  resetStaticCollidables(p);
+
   //horizontal movement
   if (press.left === press.right) {
-    !groupCol(p, colItems, p.hSpd, 0) && decelH();
+    !groupSolidCol(p, p.colItems, p.hSpd, 0) && decelH();
   } else if (press.left && p.hSpd > -p.mSpd) {
     p.hSpd -= p.accel;
   } else if (press.right && p.hSpd < p.mSpd) {
     p.hSpd += p.accel;
   }
-  while (groupCol(p, colItems, p.hSpd, 0)) {
+  while (groupSolidCol(p, p.colItems, p.hSpd, 0)) {
     decelH();
   }
   p.x += p.hSpd;
 
-  if (p.canJump && press.up && groupCol(p, colItems, 0, 1)) {
+  if (p.canJump && press.up && groupSolidCol(p, p.colItems, 0, 1)) {
     p.canJump = false;
     p.vSpd = -p.jumpHeight;
   }
-  if (!groupCol(p, colItems, 0, p.vSpd) && p.vSpd < p.jumpHeight) {
+  if (!groupSolidCol(p, p.colItems, 0, p.vSpd) && p.vSpd < p.jumpHeight) {
     p.vSpd += p.accel;
   }
-  if (groupCol(p, colItems, 0, 1) && !press.up) {
+  if (groupSolidCol(p, p.colItems, 0, 1) && !press.up) {
     p.canJump = true;
   }
-  while (groupCol(p, colItems, 0, p.vSpd)) {
+  while (groupSolidCol(p, p.colItems, 0, p.vSpd)) {
     decelV();
   }
   p.y += p.vSpd;
@@ -92,6 +113,7 @@ function step(timeStamp) {
     if (!paused) {
       movePlayer();
       positionCamera();
+      allVisChanges();
     }
   }
   requestAnimationFrame(step);

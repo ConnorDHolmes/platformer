@@ -1,18 +1,19 @@
+"use strict";
 const rm = {
   el: document.querySelector("g-rm"),
   w: 2057,
   h: 3000,
   x: 0,
   y: 0,
-  cellSize: 128,
+  cellSize: 256,
   cells: [],
 };
 
 const p = {
-  el: document.querySelector("g-itm[p]"),
+  el: document.querySelector("[p]"),
   dyn: true,
   x: 480,
-  y: 250,
+  y: 150,
   w: 32,
   h: 40,
   accel: 0.5,
@@ -21,11 +22,9 @@ const p = {
   vSpd: 0,
   jumpHeight: 12,
   canJump: false,
-  get cellX() {
-    return Math.floor(p.x / rm.cellSize);
-  },
-  get cellY() {
-    return Math.floor(p.y / rm.cellSize);
+  colItems: [],
+  get cell() {
+    return [Math.floor(this.x / rm.cellSize), Math.floor(this.y / rm.cellSize)];
   },
 };
 
@@ -35,7 +34,7 @@ const cam = {
   h: 640,
   x: 0,
   y: 0,
-  //for cosmetics only
+  //cosmetic effect
   ease: 0.05,
 };
 cam.hW = cam.w / 2;
@@ -60,6 +59,15 @@ const items = [
     y: 428,
     w: 91,
     h: 57,
+  },
+  {
+    mods: {
+      role: "spikes",
+    },
+    x: 700,
+    y: 540,
+    w: 250,
+    h: 64,
   },
   {
     solid: true,

@@ -1,9 +1,11 @@
+"use strict";
 //global paused state
 let paused = false;
 
 function createRoomCollisionCells() {
   const colCt = Math.ceil(rm.w / rm.cellSize);
   const rowCt = Math.ceil(rm.h / rm.cellSize);
+
   for (let i = 0; i <= colCt; i++) {
     const col = [];
     for (let i = 0; i <= rowCt; i++) col.push([]);
@@ -21,23 +23,23 @@ function setCellsOfStaticItem(item) {
     for (let row = y2; row >= y1; row--) rm.cells[col][row].push(item);
 }
 
-function getStaticColsOfDynItem(item) {
-  const filteredColItems = [];
-  [
-    ...rm.cells[item.cellX - 1][item.cellY - 1],
-    ...rm.cells[item.cellX][item.cellY - 1],
-    ...rm.cells[item.cellX + 1][item.cellY - 1],
-    ...rm.cells[item.cellX - 1][item.cellY],
-    ...rm.cells[item.cellX][item.cellY],
-    ...rm.cells[item.cellX + 1][item.cellY],
-    ...rm.cells[item.cellX - 1][item.cellY + 1],
-    ...rm.cells[item.cellX][item.cellY + 1],
-    ...rm.cells[item.cellX + 1][item.cellY + 1],
-  ].forEach(
-    (colItem) =>
-      !filteredColItems.includes(colItem) && filteredColItems.push(colItem)
-  );
-  return filteredColItems;
+function resetStaticCollidables(item) {
+  if (
+    !item.prevCell ||
+    item.cell[0] !== item.prevCell[0] ||
+    item.cell[1] !== item.prevCell[1]
+  ) {
+    const x = item.cell[0];
+    const y = item.cell[1];
+    const newColItems = [];
+
+    for (let col = x + 1; col >= x - 1; col--)
+      for (let row = y + 1; row >= y - 1; row--)
+        rm.cells[col]?.[row]?.forEach((colItem) => newColItems.push(colItem));
+
+    item.colItems = [...new Set(newColItems)];
+    item.prevCell = [x, y];
+  }
 }
 
 //easing function for camera
@@ -88,6 +90,9 @@ const col = (item1, item2, xMod = 0, yMod = 0) =>
 
 const groupCol = (item1, group, xMod = 0, yMod = 0) =>
   group.some((item) => col(item1, item, xMod, yMod));
+
+const groupSolidCol = (item1, group, xMod = 0, yMod = 0) =>
+  group.some((item) => item.solid && col(item1, item, xMod, yMod));
 
 //input handling
 const press = {};
