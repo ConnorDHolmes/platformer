@@ -117,3 +117,11 @@ document.addEventListener("keyup", function (e) {
     press[keys.get(e.key)] = false;
   }
 });
+
+document.addEventListener("mousedown", () => {
+  press[keys.get("ArrowUp")] = true;
+});
+
+document.addEventListener("mouseup", () => {
+  press[keys.get("ArrowUp")] = false;
+});
