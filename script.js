@@ -8,7 +8,10 @@ let then = performance.now();
 function allVisChanges() {
   while (visChangeQueue.length) {
     const change = visChangeQueue.shift();
-    change[0].style.visibility = change[1] ? "visible" : "hidden";
+    // change[0].style.visibility = change[1] ? "visible" : "hidden";
+    change[1]
+      ? change[0].removeAttribute("hide")
+      : change[0].setAttribute("hide", "");
   }
 }
 

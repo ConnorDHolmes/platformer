@@ -25,6 +25,7 @@ g-cam {
   perspective: 768px;
   perspective-origin: center;
   background-color: var(--tex-room);
+  transform: translate3d(0, 0, 0);
 }
 
 g-rm {
@@ -46,6 +47,14 @@ g-item[dyn] {
 g-itm {
   contain: layout size;
   transform-style: preserve-3d;
+}
+
+g-itm[hide] {
+  visibility: hidden;
+}
+
+g-itm[hide] g-face {
+  display: none;
 }
 
 g-itm[dyn] {
