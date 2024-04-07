@@ -1,6 +1,6 @@
 :root {
-  --tex-room: #222;
-  --tex-walls: #555;
+  --tex-room: #279af1;
+  --tex-walls: #d0a98f;
 }
 
 * {
@@ -13,35 +13,41 @@ body {
 }
 
 body {
-  display: grid;
+  margin: 0;
   height: 100vh;
-  height: 100dvh;
-  margin: auto;
+  display: grid;
   place-items: center;
-  image-rendering: pixelated;
   background-color: #000;
 }
 
 g-cam {
   contain: strict;
-  perspective: 1000px;
-}
-
-g-rm {
+  perspective: 768px;
+  perspective-origin: center;
   background-color: var(--tex-room);
 }
 
+g-rm {
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
 g-rm,
-g-itm {
+g-itm,
+g-face {
   position: absolute;
+}
+
+g-rm,
+g-item[dyn] {
   inset: 0 auto auto 0;
 }
 
 g-itm {
-  will-change: opacity;
+  contain: layout size;
+  transform-style: preserve-3d;
 }
 
-g-rm,
 g-itm[dyn] {
   will-change: opacity, transform;
 }
@@ -51,7 +57,36 @@ g-itm[p] {
 }
 
 g-itm[role="wall"] {
+  transform: translateZ(32px);
   background-color: var(--tex-walls);
+}
+
+g-face[top] {
+  inset: -64px 0 100% 0;
+  transform-origin: bottom;
+  transform: rotateX(90deg);
+  background-color: #618b4a;
+}
+
+g-face[right] {
+  inset: 0 -64px 0 100%;
+  transform-origin: left;
+  transform: rotateY(90deg);
+  background-color: #c3916f;
+}
+
+g-face[bottom] {
+  inset: 100% 0 -64px 0;
+  transform-origin: top;
+  transform: rotateX(-90deg);
+  background-color: #b77b52;
+}
+
+g-face[left] {
+  inset: 0 100% 0 -64px;
+  transform-origin: right;
+  transform: rotateY(-90deg);
+  background-color: #e1c8b7;
 }
 
 g-itm[role="spikes"] {

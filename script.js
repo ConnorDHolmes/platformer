@@ -19,25 +19,34 @@ const occluder = new IntersectionObserver(
     ),
   {
     root: cam.el,
-    rootMargin: "16px",
+    rootMargin: "32px",
   }
 );
 
 //set up the room
 function build() {
   createRoomCollisionCells();
+
   //populate room with items
   items.forEach((item) => {
     item.el = document.createElement("g-itm");
-
     occluder.observe(item.el);
+
+    //3d sides
+    const sides = ["top", "right", "bottom", "left"];
+    sides.forEach((side) => {
+      const el = document.createElement("g-face");
+      el.setAttribute(side, "");
+      item.el.append(el);
+    });
+
     setCellsOfStaticItem(item);
-    addEl(item);
+    addElStatic(item);
   });
 
   sizeEl(cam);
   sizeEl(rm);
-  updateEl(p);
+  updateElDynamic(p);
 }
 
 function positionCamera() {
@@ -49,7 +58,7 @@ function positionCamera() {
   }
   easeCam();
   //update room relative to view box
-  placeEl(rm);
+  rm.el.style.transform = `translate3d(${rm.x}px, ${rm.y}px, 0) rotate3d(1, 0, 0, -5deg) `;
 }
 
 function decelH() {
@@ -101,7 +110,7 @@ function movePlayer() {
   p.y += p.vSpd;
 
   //update player element in DOM
-  placeEl(p);
+  transEl(p);
 }
 
 //run the game at ~60fps
@@ -113,9 +122,11 @@ function step(timeStamp) {
     if (!paused) {
       movePlayer();
       positionCamera();
-      allVisChanges();
     }
   }
+  //anything that does not need to be throttled to 60fps
+  allVisChanges();
+  ///
   requestAnimationFrame(step);
 }
 

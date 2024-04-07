@@ -48,14 +48,19 @@ function easeCam() {
   rm.y += (cam.y - rm.y) * cam.ease;
 }
 
-//translate an item's DOM element to its coordinates
-function placeEl(item) {
-  item.el.style.transform = item.dyn
-    ? `translate3d(${item.x}px, ${item.y}px, 0)`
-    : `translate(${item.x}px, ${item.y}px)`;
+//position a static DOM element at its coords
+function posEl(item) {
+  item.el.style.inset = `${item.y}px ${rm.w - item.x - item.w}px ${
+    rm.h - item.y - item.h
+  }px ${item.x}px`;
 }
 
-//size an item's DOM element to its dimensions
+//translate a dynamic item's DOM element to its coords (for dynamic items)
+function transEl(item) {
+  item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, 0)`;
+}
+
+//size an item's DOM element to its dimensions (for dynamic items)
 function sizeEl(item) {
   item.el.style.width = `${item.w}px`;
   item.el.style.height = `${item.h}px`;
@@ -69,15 +74,25 @@ function styleEl(item) {
 }
 
 //size and translate and item's DOM element to its coordinates and dimensions, and apply modifier classes
-function updateEl(item) {
+function updateElStatic(item) {
+  posEl(item);
+  styleEl(item);
+}
+
+function updateElDynamic(item) {
   sizeEl(item);
-  placeEl(item);
+  transEl(item);
   styleEl(item);
 }
 
 //update item's DOM element to match its traits and then add the element to room
-function addEl(item) {
-  updateEl(item);
+function addElStatic(item) {
+  updateElStatic(item);
+  rm.el.append(item.el);
+}
+
+function addElDynamic(item) {
+  updateElDynamic(item);
   rm.el.append(item.el);
 }
 
@@ -116,12 +131,4 @@ document.addEventListener("keyup", function (e) {
   if (keys.get(e.key)) {
     press[keys.get(e.key)] = false;
   }
-});
-
-document.addEventListener("mousedown", () => {
-  press[keys.get("ArrowUp")] = true;
-});
-
-document.addEventListener("mouseup", () => {
-  press[keys.get("ArrowUp")] = false;
 });

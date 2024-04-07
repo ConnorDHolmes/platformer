@@ -2,10 +2,10 @@
 const rm = {
   el: document.querySelector("g-rm"),
   w: 2057,
-  h: 3000,
+  h: 2000,
   x: 0,
   y: 0,
-  cellSize: 256,
+  cellSize: 128,
   cells: [],
 };
 
@@ -59,15 +59,6 @@ const items = [
     y: 428,
     w: 91,
     h: 57,
-  },
-  {
-    mods: {
-      role: "spikes",
-    },
-    x: 700,
-    y: 540,
-    w: 250,
-    h: 64,
   },
   {
     solid: true,
